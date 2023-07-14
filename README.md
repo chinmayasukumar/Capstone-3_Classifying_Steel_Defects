@@ -1,3 +1,2 @@
-# Capstone-3_Classifying_steel_defects
- 
-test edit
+# Classifying Steel Defects Using Deep Learning
+
