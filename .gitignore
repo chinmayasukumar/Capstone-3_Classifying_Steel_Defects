@@ -155,3 +155,21 @@ cython_debug/
 # too big to upload
 data/interim
 data/raw
+data/
+
+# .DS_Store
+.DS_Store
+
+# Models too big to upload
+
+/Users/chinmayasukumar/Documents/Capstone Projects/Capstone-3_Classifying_steel_defects/models/resnet/final_resnet_model.h5
+
+/Users/chinmayasukumar/Documents/Capstone Projects/Capstone-3_Classifying_steel_defects/models/resnet/resnet_checkpoint.h5
+
+/Users/chinmayasukumar/Documents/Capstone Projects/Capstone-3_Classifying_steel_defects/models/resnet/resnet_hist.pkl
+
+/Users/chinmayasukumar/Documents/Capstone Projects/Capstone-3_Classifying_steel_defects/models/resnet/final_resnet_model.h5
+
+/Users/chinmayasukumar/Documents/Capstone Projects/Capstone-3_Classifying_steel_defects/models/resnet/resnet_checkpoint.h5
+
+/Users/chinmayasukumar/Documents/Capstone Projects/Capstone-3_Classifying_steel_defects/models/resnet/resnet_hist.pkl
