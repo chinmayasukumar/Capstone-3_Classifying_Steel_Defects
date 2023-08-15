@@ -44,34 +44,51 @@ During the initial investigation, a ResNet-50 model using weights from Image Net
 
 ![](/reports/figures/resnet_map.png)
 
-The second model under investigation was a CNN. The model was chosen to be as simple as possible to accomadate for limited compute. The architecture is shown below:
+The second model under investigation was a CNN. The model was chosen to be as simple as possible to accomodate for limited compute. The architecture is shown below:
 
-![](/reports/figures/
+![](/reports/figures/cnn_map.png)
+
 
 ## Modelling
 
+A Dummy Classifier was built yielding a macro accuracy of 0.17 on the validation set.
+
+### ResNet
+The f1-score macro average was chosen as the evaluation metric since all defect classes are equally important. A ResNet model with a GAP layer was first explored and yielded a maximum validation accuracy of 0.4181. The GAP layer was replaced with a Flatten layer. Its accruacy increased significantly to 0.73 on the validation set. It did struggle differentiating between the "Pitted" and "Rolled" classes. Using the Flatten layer instead of a GAP layer increased accuracy probably since less information is lost.
+
+### CNN
+The CNN(optimizer=Adam, learning_rate=0.001) was explored and displayed robust accuracy and minimal loss. The model did not overfit significantly. The training curve is shown below:
+
+![](/reports/figures/train_val_graph_cnn.png)
+
+The model significantly outperformed the ResNet model with an accuracy of 0.93.
+
+### Hyperparameter Tuning
+
+Since the CNN performed so well, the only hyperparameter tuned was the learning rate. A RandomSearch object was instantiated with a learning rate range between 0.0001, and 0.0151. 12 trials were performed and the graph below summarizes the results:
+
+![](/reports/figures/acc_plot.png)
+
+The model with a learning rate of 0.0016 peformed the best on the validation set. A local maximum can be seen around this range.
+
+### Normalizing Images
+
+The model performed superbly, however normalizing the images could further increase its performance. Therefore, the images (feature set) were adjusted so that the mean of the image array was 0 and its standard deviation was 1. The model was then trained using these adjusted images. The results on the validation set are shown below:
+
+![](/reports/figures/classification_report/class_norm_cnn.png)
+![](/reports/figures/confusion_matrix/conmat_norm_cnn.png)
+
+## Evaluation on test set
+
+![](/reports/figures/classification_report/class_test.png)
+![](/reports/figures/confusion_matrix/conmat_test.png)
+
+
 ## Discussion and Conclusion
 
+The CNN model built performed superbly. As it can be seen, the model yielded a f1-score macro average accuracy of 0.97 and did not overfit on the training or validation data and was chosen as the final model. It should be noted that this model is overall excellent at classification but the utility of this model depends heavily on the type of defect that occurs most in production. For example, the precision and recall for “Inclusions” and “Pitted” is notable but is still lower than that of the other defects. A mill that encounters more “Inclusions” and/or “Pitted” defects than most might find this model to be less useful. 
 
-LGBM contributes 60% to the ensemble model, placing a balanced importance on the influential  elements. It relies on temperature first and foremost but still performs well. Extra Trees has a limited contribution, possibly due to overfitting. Default CatBoost outperforms the Voting Regressor, but the latter is still chosen as the final model since it will be more generalizable to new data.
-
-For this business use case, both MAE and RMSE are used to judge the model's performance. Metallurgists need only a rough estimate of steel performance. The Voting Regressor ensemble model socred an MAE of ~14 MPa, RMSE of ~28 MPa, and an R2 of 0.96 when cross-validating. Considering the mean Yield strength of the set is 361 MPa, its performance is excellent for this use case.
-
-An evaluation was done on a subset of the data at a temperature of 27˚C (around room temperature). Firstly, all observations recorded at 27˚C were indexed. Using this index, new X and Y datasets were created. These new sets were also cleared of any training data. To reiterate, the resulting dataset (25 observations) was comprised exclusively of test and validation data recorded at 27˚C. The results are shown below:
-
-
-[](/reports/figures/metrics_27.png)
-
-
-
-
-
-
- 
-
-When scored on the new test and validation data, the model still performed quite well during cross-validation. Its MAE was ~27 MPa, RMSE was ~39 MPa and R2 was 0.91 which is lower than the results when the model was fitted to all the data but still quite usable.
-
-Due to the reasons specified above, the final model was chosen to be the ensemble Voting Regressor.
+This model will save time, money and manpower when applied to the automated camera system in a rolling mill. To implement this model in the production line, an engineer would have to build a pipeline to capture, access, evaluate and store the images and their predictions. As mentioned earlier, a model would have to be built that can further analyze these defects for other features such as size, shape etc.
 
 
 Project Organization
