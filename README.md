@@ -51,17 +51,17 @@ The second model under investigation was a CNN. The model was chosen to be as si
 
 ## Modelling
 
-A Dummy Classifier was built yielding a macro accuracy of 0.17 on the validation set.
+A Dummy Classifier was built yielding a macro-average F1 score of 0.17 on the validation set.
 
 ### ResNet
-The f1-score macro average was chosen as the evaluation metric since all defect classes are equally important. A ResNet model with a GAP layer was first explored and yielded a maximum validation accuracy of 0.4181. The GAP layer was replaced with a Flatten layer. Its accruacy increased significantly to 0.73 on the validation set. It did struggle differentiating between the "Pitted" and "Rolled" classes. Using the Flatten layer instead of a GAP layer increased accuracy probably since less information is lost.
+The F1 score macro average was chosen as the evaluation metric since all defect classes are equally important. A ResNet model with a GAP layer was first explored and yielded a maximum validation score of 0.4181. The GAP layer was replaced with a Flatten layer. Its accruacy increased significantly to 0.73 on the validation set. It did struggle differentiating between the "Pitted" and "Rolled" classes. Using the Flatten layer instead of a GAP layer increased its score probably since less information is lost.
 
 ### CNN
-The CNN(optimizer=Adam, learning_rate=0.001) was explored and displayed robust accuracy and minimal loss. The model did not overfit significantly. Its learning curve is shown below:
+The CNN(optimizer=Adam, learning_rate=0.001) was explored and displayed a robust score and minimal loss. The model did not overfit significantly. Its learning curve is shown below:
 
 ![](/reports/figures/train_val_graph_cnn.png)
 
-The model significantly outperformed the ResNet model with an accuracy of 0.93.
+The model significantly outperformed the ResNet model with a score of 0.93.
 
 ### Hyperparameter Tuning
 
