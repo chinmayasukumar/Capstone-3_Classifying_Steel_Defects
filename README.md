@@ -1,6 +1,6 @@
 ## Brief Summary:
 
-# Classifying Steel Defects Using Deep Learnign
+# Classifying Steel Defects Using Deep Learning
 ==============================
 
 _The identification and classification of surface defects in rolled steel is an essential quality control measure in the steel industry to ensure a surface finish that meets the customers' visual and performance expecations. Traditionally, a high-speed camera is installed in the rolling mill that captures images of strip steel that passes through. A human is usually responsible to identify and class these defects, however accuracy is usually compromised this way. Recently, advances in technology have introduced models that can detect and classify defects, the model built in this project being one of them._
