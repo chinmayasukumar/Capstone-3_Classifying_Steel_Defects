@@ -3,12 +3,12 @@
 # Classifying Steel Defects Using Deep Learnign
 ==============================
 
-_The identification and classification of surface defects in rolled steel is an essential quality control measure in the steel industry to ensure a surface finish that meets the customers' visual and performance expecations. Traditionally, a high-speed camera is installed in the rolling mill that captures images of strip steel that passes through. A human is usually responsible to identify and class these defects, however accuracy is usually compromised this way. In this project, a CNN was built to classify these surface defects._
+_The identification and classification of surface defects in rolled steel is an essential quality control measure in the steel industry to ensure a surface finish that meets the customers' visual and performance expecations. Traditionally, a high-speed camera is installed in the rolling mill that captures images of strip steel that passes through. A human is usually responsible to identify and class these defects, however accuracy is usually compromised this way. Recently, advances in technology have introduced models that can detect and classify defects, the model built in this project being one of them._
 
 
 ## Data
 
-Data was obtained from a page on [Kaggle](https://www.kaggle.com/datasets/fantacher/neu-metal-surface-defects-data)
+Data was obtained from a repository on [Kaggle](https://www.kaggle.com/datasets/fantacher/neu-metal-surface-defects-data)
 which was sourced from a research paper mentioned in the final report under /report
 
 The data set included 6 defect types, each having 300 images. In total there were 1800 images. The 6 defect types were:
@@ -35,12 +35,12 @@ All were grayscale 200x200 pixel images. Examples of each defect type is shows b
 
 ## Preprocessing
 
-The 1800 grayscale images were read the DataFrame comprised of the image paths and were stored in a numpy array. The shape of the data was (1800,200,200). This array served as the feature set. The images were also standardized so that each pixel value was between 0 and 1. The defect type column as mentioned previously was one-hot encoded as served as the target variable.
+The 1800 grayscale images were read the DataFrame comprised of the image paths and were stored in a numpy array. The shape of the data was (1800,200,200). This array served as the feature set. The images were also Min-Max Noramalized so that each pixel value was between 0 and 1. The defect type column as mentioned previously was one-hot encoded as served as the target variable.
 
 
 ## Model Explanation
 
-During the initial investigation, a ResNet-50 model using weights from Image Net were used. The data was transformed to a (1800,200,200,3) array since this model only accepts RGB images. The original top layer of the ResNet model had 1000 neurons corresponding to the 1000 classes in the ImageNet dataset. This layer was replaced by a dense layer with 6 neurons for the 6 defect types. The model architecture is shown below:
+During the initial investigation, a ResNet-50 model using weights from ImageNet were used. The data was transformed to a (1800,200,200,3) array since this model only accepts RGB images. The original top layer of the ResNet model had 1000 neurons corresponding to the 1000 classes in the ImageNet dataset. This layer was replaced by a dense layer with 6 neurons for the 6 defect types. The model architecture is shown below:
 
 ![](/reports/figures/resnet_map.png)
 
@@ -57,7 +57,7 @@ A Dummy Classifier was built yielding a macro accuracy of 0.17 on the validation
 The f1-score macro average was chosen as the evaluation metric since all defect classes are equally important. A ResNet model with a GAP layer was first explored and yielded a maximum validation accuracy of 0.4181. The GAP layer was replaced with a Flatten layer. Its accruacy increased significantly to 0.73 on the validation set. It did struggle differentiating between the "Pitted" and "Rolled" classes. Using the Flatten layer instead of a GAP layer increased accuracy probably since less information is lost.
 
 ### CNN
-The CNN(optimizer=Adam, learning_rate=0.001) was explored and displayed robust accuracy and minimal loss. The model did not overfit significantly. The training curve is shown below:
+The CNN(optimizer=Adam, learning_rate=0.001) was explored and displayed robust accuracy and minimal loss. The model did not overfit significantly. Its learning curve is shown below:
 
 ![](/reports/figures/train_val_graph_cnn.png)
 
@@ -71,9 +71,9 @@ Since the CNN performed so well, the only hyperparameter tuned was the learning 
 
 The model with a learning rate of 0.0016 peformed the best on the validation set. A local maximum can be seen around this range.
 
-### Normalizing Images
+### z-Score Standardizing Images
 
-The model performed superbly, however normalizing the images could further increase its performance. Therefore, the images (feature set) were adjusted so that the mean of the image array was 0 and its standard deviation was 1. The model was then trained using these adjusted images. The results on the validation set are shown below:
+The model performed superbly, however z-score Standardizing the images could further increase its performance. Therefore, the images (feature set) were adjusted so that the mean of the image array was 0 and its standard deviation was 1. The model was then trained using these adjusted images. The results on the validation set are shown below:
 
 ![](/reports/figures/classification_report/class_norm_cnn.png)
 ![](/reports/figures/confusion_matrix/conmat_norm_cnn.png)
@@ -86,7 +86,7 @@ The model performed superbly, however normalizing the images could further incre
 
 ## Discussion and Conclusion
 
-The CNN model built performed superbly. As it can be seen, the model yielded a f1-score macro average accuracy of 0.97 and did not overfit on the training or validation data and was chosen as the final model. It should be noted that this model is overall excellent at classification but the utility of this model depends heavily on the type of defect that occurs most in production. For example, the precision and recall for “Inclusions” and “Pitted” is notable but is still lower than that of the other defects. A mill that encounters more “Inclusions” and/or “Pitted” defects than most might find this model to be less useful. 
+The CNN model built performed superbly. As it can be seen, the model did not overfit on the training or validation data and was therefore chosen as the final model. As it can be seen it yielded a 0.97 F1 score macro average. It should be noted that this model is overall excellent at classification but the utility of this model depends heavily on the type of defect that occurs most in production. For example, the precision and recall for “Inclusions” and “Pitted” is notable but is still lower than that of the other defects. A mill that encounters more “Inclusions” and/or “Pitted” defects than most might find this model to be less useful. 
 
 This model will save time, money and manpower when applied to the automated camera system in a rolling mill. To implement this model in the production line, an engineer would have to build a pipeline to capture, access, evaluate and store the images and their predictions. As mentioned earlier, a model would have to be built that can further analyze these defects for other features such as size, shape etc.
 
